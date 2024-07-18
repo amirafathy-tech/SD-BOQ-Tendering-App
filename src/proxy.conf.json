@@ -1,0 +1,8 @@
+{
+    "/api": {
+        "target": "https://security.c-62fc472.kyma.ondemand.com",
+        "secure": false,
+        "changeOrigin": true,
+        "logLevel": "debug"
+    }
+}
