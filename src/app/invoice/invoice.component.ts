@@ -532,7 +532,7 @@ export class InvoiceComponent {
         profitMargin: this.newMainItem.profitMargin,
         totalWithProfit: this.newMainItem.totalWithProfit
       }
-      if (this.newMainItem.quantity === 0 || this.newMainItem.description === "" || this.newMainItem.currencyCode === "") {
+      if (this.newMainItem.quantity === 0 || this.newMainItem.description === "" || this.selectedCurrency === "") {
         // || this.newMainItem.unitOfMeasurementCode === ""  // till retrieved from cloud correctly
         this.messageService.add({
           severity: 'error',
@@ -573,7 +573,7 @@ export class InvoiceComponent {
         profitMargin: this.newMainItem.profitMargin,
         totalWithProfit: this.newMainItem.totalWithProfit
       }
-      if (this.resultAfterTest === 0 || this.newMainItem.description === "" || this.newMainItem.currencyCode === "") {
+      if (this.resultAfterTest === 0 || this.newMainItem.description === "" || this.selectedCurrency === "") {
         // || this.newMainItem.unitOfMeasurementCode === ""  // till retrieved from cloud correctly
         this.messageService.add({
           severity: 'error',
@@ -616,7 +616,7 @@ export class InvoiceComponent {
         profitMargin: this.newMainItem.profitMargin,
         totalWithProfit: this.newMainItem.totalWithProfit
       }
-      if (this.newMainItem.quantity === 0 || this.newMainItem.description === "" || this.selectedServiceNumberRecord.description === "" || this.newMainItem.currencyCode === "") {
+      if (this.newMainItem.quantity === 0 ||  this.selectedServiceNumberRecord.description === "" || this.selectedCurrency === "") {
         // || this.newMainItem.unitOfMeasurementCode === ""  // till retrieved from cloud correctly
         this.messageService.add({
           severity: 'error',
@@ -660,7 +660,7 @@ export class InvoiceComponent {
         profitMargin: this.newMainItem.profitMargin,
         totalWithProfit: this.newMainItem.totalWithProfit
       }
-      if (this.resultAfterTest === 0 || this.selectedServiceNumberRecord.description === "" || this.newMainItem.currencyCode === "") {
+      if (this.resultAfterTest === 0 || this.selectedServiceNumberRecord.description === "" || this.selectedCurrency === "") {
         // || this.newMainItem.unitOfMeasurementCode === ""  // till retrieved from cloud correctly
         this.messageService.add({
           severity: 'error',
