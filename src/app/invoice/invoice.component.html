@@ -1,7 +1,4 @@
-<!-- <div class="card mt-5 w-100"> -->
-
 <div class="card ">
-
     <p-toast />
     <p-toolbar>
 
@@ -71,15 +68,16 @@
                     <input pInputText type="text" placeholder="Search...."
                         class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary " />
                 </span>
-    
+
                 <!-- <div class="p-inputgroup ml-3">
                     <input type="number" pInputNumber placeholder="Profit Margin" />
                     <button type="button" pButton styleClass="p-button-warn">Apply</button>
                 </div> -->
                 <div class="p-inputgroup ml-3">
-    <input type="number" pInputNumber placeholder="Profit Margin" [(ngModel)]="profitMarginValue" />
-    <button type="button" pButton styleClass="p-button-warn" (click)="updateProfitMargin(profitMarginValue)">Apply</button>
-</div>
+                    <input type="number" pInputNumber placeholder="Profit Margin" [(ngModel)]="profitMarginValue" />
+                    <button type="button" pButton styleClass="p-button-warn"
+                        (click)="updateProfitMargin(profitMarginValue)">Apply</button>
+                </div>
 
             </div>
             <p-button label="Expand All" icon="pi pi-plus" (onClick)="expandAll()" />
@@ -148,7 +146,7 @@
             <td style="min-width: 10rem;">
 
             </td>
-            <td  style="min-width: 10rem;">
+            <td style="min-width: 10rem;">
                 <p-cellEditor>
                     <ng-template pTemplate="input">
                         <p-dropdown [options]="recordsServiceNumber" [(ngModel)]="mainItem.serviceNumberCode"
@@ -170,7 +168,7 @@
                 </p-cellEditor>
                 <!-- {{ mainItem.serviceNumber }} -->
             </td>
-            <td  style="min-width: 10rem;">
+            <td style="min-width: 10rem;">
                 <p-cellEditor>
                     <ng-template pTemplate="input">
                         <ng-container *ngIf="!updateSelectedServiceNumberRecord">
@@ -183,15 +181,13 @@
                         <ng-container *ngIf="!updateShortTextChangeAllowed && updateSelectedServiceNumberRecord">
                             {{ updateSelectedServiceNumberRecord.description }}
                         </ng-container>
-                        <!-- <input pInputText type="text" [(ngModel)]="mainItem.description"> -->
-
                     </ng-template>
                     <ng-template pTemplate="output">
                         {{ mainItem.description }}
                     </ng-template>
                 </p-cellEditor>
             </td>
-            <td  style="min-width: 10rem;">
+            <td style="min-width: 10rem;">
 
                 <p-cellEditor>
                     <ng-template pTemplate="input">
@@ -201,15 +197,13 @@
                         <ng-container *ngIf="updatedFormulaRecord && resultAfterTestUpdate">
                             {{ resultAfterTestUpdate}}
                         </ng-container>
-                        <!-- <input pInputNumber type="number" [(ngModel)]="mainItem.quantity"> -->
-
                     </ng-template>
                     <ng-template pTemplate="output">
                         {{ mainItem.quantity }}
                     </ng-template>
                 </p-cellEditor>
             </td>
-            <td  style="min-width: 10rem;">
+            <td style="min-width: 10rem;">
                 <p-cellEditor>
                     <ng-template pTemplate="input">
                         <ng-container *ngIf="updateSelectedServiceNumberRecord">
@@ -235,7 +229,7 @@
                     </ng-template>
                 </p-cellEditor>
             </td>
-            <td  style="min-width: 10rem;">
+            <td style="min-width: 10rem;">
                 <p-cellEditor>
                     <ng-template pTemplate="input">
                         <p-dropdown [options]="recordsFormula" [(ngModel)]="mainItem.formulaCode"
@@ -257,8 +251,7 @@
                     </ng-template>
                 </p-cellEditor>
             </td>
-            <td  style="min-width: 10rem;">
-                <!-- Parameters -->
+            <td style="min-width: 10rem;">
                 <button class="mb-2" (click)="openPopupUpdate()">Enter Parameters</button>
                 <ng-container *ngIf="showPopupUpdate && updatedFormulaRecord ">
                     <div class="popup">
@@ -272,7 +265,7 @@
                     </div>
                 </ng-container>
             </td>
-            <td  style="min-width: 10rem;">
+            <td style="min-width: 10rem;">
                 <p-cellEditor>
                     <ng-template pTemplate="input">
                         <input pInputNumber name="amountPerUnit" type="number" [min]="0"
@@ -284,7 +277,7 @@
                     </ng-template>
                 </p-cellEditor>
             </td>
-            <td  style="min-width: 10rem;">
+            <td style="min-width: 10rem;">
                 <p-cellEditor>
                     <ng-template pTemplate="input">
                         <p-dropdown [options]="recordsCurrency" [(ngModel)]="mainItem.currencyCode"
@@ -304,24 +297,22 @@
                     </ng-template>
                 </p-cellEditor>
             </td>
-            <td  style="min-width: 10rem;">
+            <td style="min-width: 10rem;">
                 <p-cellEditor>
                     <ng-template pTemplate="input">
-                        <!-- <input pInputNumber name="total" type="number" [min]="0"> -->
                         <ng-container *ngIf="updatedFormulaRecord && resultAfterTestUpdate">
                             {{resultAfterTestUpdate * mainItem.amountPerUnit}}
                         </ng-container>
                         <ng-container *ngIf="!updatedFormulaRecord">
                             {{ mainItem.quantity * mainItem.amountPerUnit }}
                         </ng-container>
-
                     </ng-template>
                     <ng-template pTemplate="output">
                         {{ mainItem.total }}
                     </ng-template>
                 </p-cellEditor>
             </td>
-            <td  style="min-width: 10rem;">
+            <td style="min-width: 10rem;">
                 <p-cellEditor>
                     <ng-template pTemplate="input">
                         <input pInputNumber name="profitMargin" type="number" [min]="0"
@@ -333,7 +324,7 @@
                     </ng-template>
                 </p-cellEditor>
             </td>
-            <td  style="min-width: 10rem;">
+            <td style="min-width: 10rem;">
                 <p-cellEditor>
                     <ng-template pTemplate="input">
                         <input pInputNumber name="amountPerUnitWithProfit" type="number" [min]="0"
@@ -345,7 +336,7 @@
                     </ng-template>
                 </p-cellEditor>
             </td>
-            <td  style="min-width: 10rem;">
+            <td style="min-width: 10rem;">
                 <p-cellEditor>
                     <ng-template pTemplate="input">
                         <input pInputNumber name="totalWithProfit" type="number" [min]="0"
@@ -392,7 +383,7 @@
                                 [(ngModel)]="subItem.selected" (change)="onSubItemSelection($event,subItem)"
                                 [checked]="subItem.selected">
                         </td>
-                        <td  style="min-width: 10rem;">
+                        <td style="min-width: 10rem;">
                             <p-cellEditor>
                                 <ng-template pTemplate="input">
                                     <p-dropdown [options]="recordsServiceNumber" [(ngModel)]="subItem.serviceNumberCode"
@@ -414,7 +405,7 @@
                                 </ng-template>
                             </p-cellEditor>
                         </td>
-                        <td  style="min-width: 10rem;">
+                        <td style="min-width: 10rem;">
                             <p-cellEditor>
                                 <ng-template pTemplate="input">
                                     <ng-container *ngIf="!updateSelectedServiceNumberRecord">
@@ -430,18 +421,15 @@
                                         *ngIf="!updateShortTextChangeAllowed && updateSelectedServiceNumberRecord">
                                         {{ updateSelectedServiceNumberRecord.description }}
                                     </ng-container>
-                                    <!-- <input pInputText type="text" [(ngModel)]="subItem.description"> -->
-
                                 </ng-template>
                                 <ng-template pTemplate="output">
                                     {{ subItem.description }}
                                 </ng-template>
                             </p-cellEditor>
                         </td>
-                        <td  style="min-width: 10rem;">
+                        <td style="min-width: 10rem;">
                             <p-cellEditor>
                                 <ng-template pTemplate="input">
-                                    <!-- <input pInputNumber type="number" [(ngModel)]="subItem.quantity"> -->
                                     <ng-container *ngIf="!updatedFormulaRecord">
                                         <input pInputNumber [min]="0" type="number" [(ngModel)]="subItem.quantity">
                                     </ng-container>
@@ -454,7 +442,7 @@
                                 </ng-template>
                             </p-cellEditor>
                         </td>
-                        <td  style="min-width: 10rem;">
+                        <td style="min-width: 10rem;">
                             <p-cellEditor>
                                 <ng-template pTemplate="input">
                                     <ng-container *ngIf="updateSelectedServiceNumberRecord">
@@ -484,7 +472,7 @@
                                 </ng-template>
                             </p-cellEditor>
                         </td>
-                        <td  style="min-width: 10rem;">
+                        <td style="min-width: 10rem;">
                             <p-cellEditor>
                                 <ng-template pTemplate="input">
                                     <p-dropdown [options]="recordsFormula" [(ngModel)]="subItem.formulaCode"
@@ -520,7 +508,7 @@
                                 </div>
                             </ng-container>
                         </td>
-                        <td  style="min-width: 10rem;">
+                        <td style="min-width: 10rem;">
                             <p-cellEditor>
                                 <ng-template pTemplate="input">
                                     <input pInputNumber name="amountPerUnit" type="number" [min]="0"
@@ -532,7 +520,7 @@
                                 </ng-template>
                             </p-cellEditor>
                         </td>
-                        <td  style="min-width: 10rem;">
+                        <td style="min-width: 10rem;">
                             <p-cellEditor>
                                 <ng-template pTemplate="input">
                                     <p-dropdown [options]="recordsCurrency" [(ngModel)]="subItem.currencyCode"
@@ -553,7 +541,7 @@
                                 </ng-template>
                             </p-cellEditor>
                         </td>
-                        <td  style="min-width: 10rem;">
+                        <td style="min-width: 10rem;">
                             <p-cellEditor>
                                 <ng-template pTemplate="input">
                                     <ng-container *ngIf="updatedFormulaRecord && resultAfterTestUpdate">
@@ -562,8 +550,6 @@
                                     <ng-container *ngIf="!updatedFormulaRecord">
                                         {{ subItem.quantity * subItem.amountPerUnit }}
                                     </ng-container>
-                                    <!-- <input pInputNumber name="total" type="number" [min]="0"> -->
-
                                 </ng-template>
                                 <ng-template pTemplate="output">
                                     {{ subItem.total }}
@@ -638,8 +624,6 @@
                                 <input pInputNumber name="quantity" type="number" [min]="0"
                                     [(ngModel)]="newSubItem.quantity">
                             </ng-container>
-                            <!-- <input pInputNumber name="quantity" type="number" [min]="0"
-                                [(ngModel)]="newSubItem.quantity"> -->
                         </td>
                         <td style="min-width: 10rem;">
                             <ng-container *ngIf="selectedServiceNumberRecord">
@@ -714,7 +698,6 @@
                             <ng-container *ngIf="!selectedFormulaRecord">
                                 {{ (newSubItem.quantity ?? 0) * (newSubItem.amountPerUnit ?? 0) }}
                             </ng-container>
-                            <!-- <input pInputNumber name="total" type="number" [min]="0" [(ngModel)]="newSubItem.total"> -->
                         </td>
                         <td style="min-width: 16.5rem;">
                         </td>
@@ -730,9 +713,7 @@
                     </tr>
                 </ng-template>
             </p-table>
-            <!-- </div> -->
         </td>
-        <!-- </tr> -->
     </ng-template>
 
     <ng-template pTemplate="footer" class="m-3">
@@ -886,5 +867,3 @@
 </p-table>
 
 <p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>
-
-<!-- </div> -->

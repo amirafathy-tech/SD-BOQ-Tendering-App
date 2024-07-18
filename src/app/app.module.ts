@@ -81,7 +81,6 @@ import { InvoiceComponent } from './invoice/invoice.component';
   
     NgHttpLoaderModule.forRoot(),
   ],
- // providers: [],
  providers: [
   provideClientHydration(),
   {
