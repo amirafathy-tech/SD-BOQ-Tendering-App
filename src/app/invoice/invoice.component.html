@@ -28,7 +28,7 @@
             </div>
         </div> -->
         <div class="p-toolbar-group-end">
-            <button pButton pRipple icon="pi pi-copy" class="p-button-rounded m-2"></button>
+            <!-- <button pButton pRipple icon="pi pi-copy" class="p-button-rounded m-2"></button> -->
             <button pButton size="small" icon="pi pi-trash" (click)="deleteRecord()" severity="danger"
                 class="m-2"></button>
             <button pButton icon="pi pi-print" size="small" class="m-2 "></button>
@@ -60,28 +60,26 @@
 <p-table [value]="mainItemsRecords" dataKey="mainItemCode" [resizableColumns]="true" [expandedRowKeys]="expandedRows"
     editMode="row">
     <ng-template pTemplate="caption">
-        <div class="flex flex-wrap justify-content-center gap-2">
-            <div class="p-toolbar-group-center">
+        <div class="flex flex-wrap justify-content-between gap-2">
+            <div >
                 <span class="p-input-icon-left">
-                    <!-- <i class="pi pi-search"></i> -->
-                    <!-- <input pInputText placeholder="Search" /> -->
                     <input pInputText type="text" placeholder="Search...."
                         class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary " />
                 </span>
 
-                <!-- <div class="p-inputgroup ml-3">
-                    <input type="number" pInputNumber placeholder="Profit Margin" />
-                    <button type="button" pButton styleClass="p-button-warn">Apply</button>
-                </div> -->
-                <div class="p-inputgroup ml-3">
-                    <input type="number" pInputNumber placeholder="Profit Margin" [(ngModel)]="profitMarginValue" />
-                    <button type="button" pButton styleClass="p-button-warn"
-                        (click)="updateProfitMargin(profitMarginValue)">Apply</button>
-                </div>
-
             </div>
-            <p-button label="Expand All" icon="pi pi-plus" (onClick)="expandAll()" />
-            <p-button label="Collapse All" icon="pi pi-minus" (onClick)="collapseAll()" />
+            <div>
+                
+                <div class="p-inputgroup ml-3">
+                    <input type="number"[min]="0"  pInputNumber placeholder="Profit Margin" [(ngModel)]="profitMarginValue" />
+                    <button type="button" pButton class="btn btn-outline-primary"
+                        (click)="updateProfitMargin(profitMarginValue)">Apply Profit Margin</button>
+                </div>
+            </div>
+            <div>
+                <p-button class=" btn btn-sm" label="Expand All" icon="pi pi-plus" (onClick)="expandAll()" />
+                <p-button class="btn btn-sm" label="Collapse All" icon="pi pi-minus" (onClick)="collapseAll()" />
+            </div>
         </div>
     </ng-template>
 
@@ -354,7 +352,7 @@
                     <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil"
                         (click)="onMainItemEditInit(mainItem)" class="p-button-rounded p-button-text"></button>
                     <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check"
-                        (click)="onMainItemEditSave(mainItem.id,mainItem)"
+                        (click)="onMainItemEditSave(mainItem.mainItemCode,mainItem)"
                         class="p-button-rounded p-button-text p-button-success mr-2"></button>
                     <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times"
                         (click)="onMainItemEditCancel(mainItem, ri)"
@@ -409,7 +407,7 @@
                             <p-cellEditor>
                                 <ng-template pTemplate="input">
                                     <ng-container *ngIf="!updateSelectedServiceNumberRecord">
-                                        <input pInputText type="text" [(ngModel)]="mainItem.description">
+                                        <input pInputText type="text" [(ngModel)]="subItem.description">
                                     </ng-container>
                                     <ng-container
                                         *ngIf="updateShortTextChangeAllowed && updateSelectedServiceNumberRecord">
