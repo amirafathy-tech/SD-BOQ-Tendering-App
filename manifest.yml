@@ -1,6 +1,7 @@
 applications:
-  - name: btp-sd-app
+  - name: tendering-app
     buildpack: staticfile_buildpack
     memory: 2048MB
     instances: 1
+    random-route: false
     path: dist/btp-sd-app
