@@ -8,7 +8,7 @@ import { InvoiceComponent } from './invoice/invoice.component';
 
 
 const routes: Routes = [
-  { path: '', component: AppComponent },
+  { path: '', component: InvoiceComponent },
   { path: 'login', component: AuthComponent },
   { path: 'tendering', component: InvoiceComponent },
 
