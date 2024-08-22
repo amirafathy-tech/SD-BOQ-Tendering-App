@@ -1,0 +1,30 @@
+/* .text-ellipsis {
+    
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+} */
+
+/* .text-ellipsis {
+    white-space: nowrap; 
+    overflow: hidden;    
+    text-overflow: ellipsis;
+    display: block; 
+    max-width: 100%; 
+} */
+
+
+.text-container {
+    display: flex;
+    align-items: center;      /* Center text vertically */
+    overflow: hidden;         /* Ensure container doesn’t overflow */
+}
+
+/* Ensure text truncation */
+.text-ellipsis {
+    white-space: nowrap;      /* Prevents text from wrapping */
+    overflow: hidden;         /* Hides overflowing text */
+    text-overflow: ellipsis;  /* Adds ellipsis when text is cut off */
+    flex: 1;                  /* Ensures it fills available space */
+}

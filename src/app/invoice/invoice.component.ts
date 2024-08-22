@@ -54,15 +54,15 @@ export class InvoiceComponent {
   updateProfitMargin(value: number) {
     for (const row of this.selectedRowsForProfit) {
       row.profitMargin = value;
-      const { mainItemCode, total, totalWithProfit, ...mainItemWithoutMainItemCode } = row;
-      const updatedMainItem = this.removePropertiesFrom(mainItemWithoutMainItemCode, ['mainItemCode', 'subItemCode']);
+      const { invoiceMainItemCode, total, totalWithProfit, ...mainItemWithoutMainItemCode } = row;
+      const updatedMainItem = this.removePropertiesFrom(mainItemWithoutMainItemCode, ['invoiceMainItemCode', 'invoiceSubItemCode']);
       console.log(updatedMainItem);
 
       const newRecord: MainItem = {
         ...updatedMainItem, // Copy all properties from the original record
         // Modify specific attributes
         subItems: (row?.subItems ?? []).map(subItem =>
-          this.removeProperties(subItem, ['mainItemCode', 'subItemCode'])
+          this.removeProperties(subItem, ['invoiceMainItemCode', 'invoiceSubItemCode'])
         ),
         profitMargin: value
 
@@ -71,7 +71,7 @@ export class InvoiceComponent {
       const updatedRecord = this.removeProperties(newRecord, ['selected'])
 
 
-      this._ApiService.patch<MainItem>('mainitems', row.mainItemCode, updatedRecord).subscribe(response => {
+      this._ApiService.patch<MainItem>('mainitems', row.invoiceMainItemCode, updatedRecord).subscribe(response => {
         console.log('mainitem updated :', response);
         this.totalValue = 0;
         this.ngOnInit();
@@ -96,7 +96,8 @@ export class InvoiceComponent {
       this.recordsCurrency = response;
     });
     this._ApiService.get<MainItem[]>('mainitems').subscribe(response => {
-      this.mainItemsRecords = response.sort((a, b) => b.mainItemCode - a.mainItemCode);
+      this.mainItemsRecords = response.sort((a, b) => a.invoiceMainItemCode - b.invoiceMainItemCode);
+      //response.sort((a, b) => b.invoiceMainItemCode - a.invoiceMainItemCode);
       console.log(this.mainItemsRecords);
 
       this.totalValue = this.mainItemsRecords.reduce((sum, record) => sum + record.totalWithProfit, 0);
@@ -233,7 +234,7 @@ export class InvoiceComponent {
     }
   }
   expandAll() {
-    this.mainItemsRecords.forEach(item => this.expandedRows[item.mainItemCode] = true);
+    this.mainItemsRecords.forEach(item => this.expandedRows[item.invoiceMainItemCode] = true);
   }
   collapseAll() {
     this.expandedRows = {};
@@ -242,13 +243,13 @@ export class InvoiceComponent {
   // For Edit  MainItem
   clonedMainItem: { [s: number]: MainItem } = {};
   onMainItemEditInit(record: MainItem) {
-    this.clonedMainItem[record.mainItemCode] = { ...record };
+    this.clonedMainItem[record.invoiceMainItemCode] = { ...record };
   }
   onMainItemEditSave(index: number, record: MainItem) {
     console.log(record);
 
-    const { mainItemCode, total, totalWithProfit, ...mainItemWithoutMainItemCode } = record;
-    const updatedMainItem = this.removePropertiesFrom(mainItemWithoutMainItemCode, ['mainItemCode', 'subItemCode']);
+    const { invoiceMainItemCode, total, totalWithProfit, ...mainItemWithoutMainItemCode } = record;
+    const updatedMainItem = this.removePropertiesFrom(mainItemWithoutMainItemCode, ['invoiceMainItemCode', 'invoiceSubItemCode']);
     console.log(updatedMainItem);
 
     console.log(this.updateSelectedServiceNumber);
@@ -260,13 +261,13 @@ export class InvoiceComponent {
         ...record, // Copy all properties from the original record
         // Modify specific attributes
         subItems: (record?.subItems ?? []).map(subItem =>
-          this.removeProperties(subItem, ['mainItemCode', 'subItemCode'])
+          this.removeProperties(subItem, ['invoiceMainItemCode', 'invoiceSubItemCode'])
         ),
         unitOfMeasurementCode: this.updateSelectedServiceNumberRecord.baseUnitOfMeasurement,
         description: this.updateSelectedServiceNumberRecord.description,
       };
       console.log(newRecord);
-      this._ApiService.patch<MainItem>('mainitems', record.mainItemCode, newRecord).subscribe(response => {
+      this._ApiService.patch<MainItem>('mainitems', record.invoiceMainItemCode, newRecord).subscribe(response => {
         console.log('mainitem updated:', response);
         if (response) {
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Record is updated' });
@@ -285,14 +286,14 @@ export class InvoiceComponent {
       const newRecord: MainItem = {
         ...record,
         subItems: (record?.subItems ?? []).map(subItem =>
-          this.removeProperties(subItem, ['mainItemCode', 'subItemCode'])
+          this.removeProperties(subItem, ['invoiceMainItemCode', 'invoiceSubItemCode'])
         ),
         unitOfMeasurementCode: this.updateSelectedServiceNumberRecord.baseUnitOfMeasurement,
         description: this.updateSelectedServiceNumberRecord.description,
         quantity: this.resultAfterTestUpdate,
       };
       console.log(newRecord);
-      this._ApiService.patch<MainItem>('mainitems', record.mainItemCode, newRecord).subscribe(response => {
+      this._ApiService.patch<MainItem>('mainitems', record.invoiceMainItemCode, newRecord).subscribe(response => {
         console.log('mainitem updated:', response);
         if (response) {
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Record is updated' });
@@ -310,12 +311,12 @@ export class InvoiceComponent {
       const newRecord: MainItem = {
         ...record,
         subItems: (record?.subItems ?? []).map(subItem =>
-          this.removeProperties(subItem, ['mainItemCode', 'subItemCode'])
+          this.removeProperties(subItem, ['invoiceMainItemCode', 'invoiceSubItemCode'])
         ),
         quantity: this.resultAfterTestUpdate,
       };
       console.log(newRecord);
-      this._ApiService.patch<MainItem>('mainitems', record.mainItemCode, newRecord).subscribe(response => {
+      this._ApiService.patch<MainItem>('mainitems', record.invoiceMainItemCode, newRecord).subscribe(response => {
         console.log('mainitem updated:', response);
         if (response) {
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Record is updated' });
@@ -331,7 +332,7 @@ export class InvoiceComponent {
     }
     if (!this.updateSelectedServiceNumberRecord && !this.updatedFormulaRecord && !this.resultAfterTestUpdate) {
       console.log({ ...mainItemWithoutMainItemCode });
-      this._ApiService.patch<MainItem>('mainitems', record.mainItemCode, { ...updatedMainItem }).subscribe(response => {
+      this._ApiService.patch<MainItem>('mainitems', record.invoiceMainItemCode, { ...updatedMainItem }).subscribe(response => {
         console.log('mainitem updated:', response);
         if (response) {
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Record is updated' });
@@ -346,15 +347,15 @@ export class InvoiceComponent {
     }
   }
   onMainItemEditCancel(row: MainItem, index: number) {
-    this.mainItemsRecords[index] = this.clonedMainItem[row.mainItemCode]
-    delete this.clonedMainItem[row.mainItemCode]
+    this.mainItemsRecords[index] = this.clonedMainItem[row.invoiceMainItemCode]
+    delete this.clonedMainItem[row.invoiceMainItemCode]
   }
 
   // For Edit  SubItem
   clonedSubItem: { [s: number]: SubItem } = {};
   onSubItemEditInit(record: SubItem) {
-    if (record.subItemCode) {
-      this.clonedSubItem[record.subItemCode] = { ...record };
+    if (record.invoiceSubItemCode) {
+      this.clonedSubItem[record.invoiceSubItemCode] = { ...record };
     }
   }
   onSubItemEditSave(index: number, record: SubItem) {
@@ -362,7 +363,7 @@ export class InvoiceComponent {
     console.log(index);
 
 
-    const { subItemCode, ...subItemWithoutSubItemCode } = record;
+    const { invoiceSubItemCode, ...subItemWithoutSubItemCode } = record;
 
     console.log(this.updateSelectedServiceNumber);
     if (this.updateSelectedServiceNumberRecord) {
@@ -445,10 +446,29 @@ export class InvoiceComponent {
       });
     }
   }
-  onSubItemEditCancel(row: SubItem, index: number) {
-    this.subItemsRecords[index] = this.clonedSubItem[row.subItemCode ? row.subItemCode : 0]
-    delete this.clonedSubItem[row.subItemCode ? row.subItemCode : 0]
+   
+   onSubItemEditCancel(subItem: any, index: number) {
+    // Check if subItem exists in clonedSubItems
+    const originalItem = this.clonedSubItem[subItem.invoiceSubItemCode];
+
+    if (originalItem) {
+      // Revert the item in the table to its original state
+      this.mainItemsRecords.forEach(mainItem => {
+        if (mainItem.subItems && mainItem.subItems[index] === subItem) {
+          mainItem.subItems[index] = { ...originalItem }; // Restore original item
+        }
+      });
+      // Remove the item from clonedSubItems
+      delete this.clonedSubItem[subItem.invoiceSubItemCode];
+    }
+
   }
+  // onSubItemEditCancel(row: SubItem, index: number) {
+  //   this.subItemsRecords[index] = this.clonedSubItem[row.invoiceSubItemCode]
+  //   delete this.clonedSubItem[row.invoiceSubItemCode]
+  //   // this.subItemsRecords[index] = this.clonedSubItem[row.invoiceSubItemCode ? row.invoiceSubItemCode : 0]
+  //   // delete this.clonedSubItem[row.invoiceSubItemCode ? row.invoiceSubItemCode : 0]
+  // }
 
   // Delete MainItem || SubItem
   deleteRecord() {
@@ -461,11 +481,7 @@ export class InvoiceComponent {
         accept: () => {
           for (const record of this.selectedMainItems) {
             console.log(record);
-            // const updatedRecord: ModelSpecDetails = {
-            //   ...record, // Copy all properties from the original record
-            //   deletionIndicator: true
-            // }
-            this._ApiService.delete<MainItem>('mainitems', record.mainItemCode).subscribe(response => {
+            this._ApiService.delete<MainItem>('mainitems', record.invoiceMainItemCode).subscribe(response => {
               console.log('mainitem deleted :', response);
               this.totalValue = 0;
               this.ngOnInit();
@@ -484,12 +500,8 @@ export class InvoiceComponent {
         accept: () => {
           for (const record of this.selectedSubItems) {
             console.log(record);
-            // const updatedRecord: ModelSpecDetails = {
-            //   ...record, // Copy all properties from the original record
-            //   deletionIndicator: true
-            // }
-            if (record.subItemCode) {
-              this._ApiService.delete<SubItem>('subitems', record.subItemCode).subscribe(response => {
+            if (record.invoiceSubItemCode) {
+              this._ApiService.delete<SubItem>('subitems', record.invoiceSubItemCode).subscribe(response => {
                 console.log('subitem deleted :', response);
                 //this.totalValue = 0;
                 this.ngOnInit();
@@ -506,7 +518,7 @@ export class InvoiceComponent {
 
   // For Add new  Main Item
   newMainItem: MainItem = {
-    mainItemCode: 0,
+    invoiceMainItemCode: 0,
     serviceNumberCode: 0,
     description: "",
     quantity: 0,
@@ -695,7 +707,7 @@ export class InvoiceComponent {
 
   resetNewMainItem() {
     this.newMainItem = {
-      mainItemCode: 0,
+      invoiceMainItemCode: 0,
       serviceNumberCode: 0,
       description: "",
       quantity: 0,
@@ -715,8 +727,8 @@ export class InvoiceComponent {
 
   // For Add new  Sub Item
   newSubItem: SubItem = {
-    subItemCode: 0,
-    mainItemCode: 0,
+    invoiceSubItemCode: 0,
+    invoiceMainItemCode: 0,
     serviceNumberCode: 0,
     description: "",
     quantity: 0,
@@ -752,7 +764,7 @@ export class InvoiceComponent {
           })
         );
         console.log(filteredSubItem);
-        const { mainItemCode, total, totalWithProfit, ...mainItemWithoutMainItemCode } = mainItem;
+        const { invoiceMainItemCode, total, totalWithProfit, ...mainItemWithoutMainItemCode } = mainItem;
 
         const updatedRecord: MainItem = {
           ...mainItemWithoutMainItemCode, // Copy all properties from the original record
@@ -763,7 +775,7 @@ export class InvoiceComponent {
             filteredSubItem
           ],
 
-          mainItemCode: 0,
+          invoiceMainItemCode: 0,
           totalWithProfit: 0
         }
         console.log(updatedRecord.subItems);
@@ -776,7 +788,7 @@ export class InvoiceComponent {
           })
         );
         console.log(filteredRecord);
-        this._ApiService.patch<MainItem>('mainitems', mainItem.mainItemCode, filteredRecord).subscribe((response: MainItem) => {
+        this._ApiService.patch<MainItem>('mainitems', mainItem.invoiceMainItemCode, filteredRecord).subscribe((response: MainItem) => {
           console.log('mainitem Updated && subItem Created:', response);
           if (response) {
             this.resetNewSubItem();
@@ -813,7 +825,7 @@ export class InvoiceComponent {
           })
         );
         console.log(filteredSubItem);
-        const { mainItemCode, total, totalWithProfit, ...mainItemWithoutMainItemCode } = mainItem;
+        const { invoiceMainItemCode, total, totalWithProfit, ...mainItemWithoutMainItemCode } = mainItem;
         const updatedRecord: MainItem = {
           ...mainItemWithoutMainItemCode, // Copy all properties from the original record
           subItems: [
@@ -823,7 +835,7 @@ export class InvoiceComponent {
             filteredSubItem
           ],
 
-          mainItemCode: 0,
+          invoiceMainItemCode: 0,
           totalWithProfit: 0
         }
         console.log(updatedRecord.subItems);
@@ -834,7 +846,7 @@ export class InvoiceComponent {
           })
         );
         console.log(filteredRecord);
-        this._ApiService.patch<MainItem>('mainitems', mainItem.mainItemCode, filteredRecord).subscribe((response: MainItem) => {
+        this._ApiService.patch<MainItem>('mainitems', mainItem.invoiceMainItemCode, filteredRecord).subscribe((response: MainItem) => {
           console.log('mainitem Updated && subItem Created:', response);
           if (response) {
             this.resetNewSubItem();
@@ -875,7 +887,7 @@ export class InvoiceComponent {
         console.log(filteredSubItem);
 
         // const { mainItemCode, ...mainItemWithoutMainItemCode } = mainItem;
-        const { mainItemCode, total, totalWithProfit, ...mainItemWithoutMainItemCode } = mainItem;
+        const { invoiceMainItemCode, total, totalWithProfit, ...mainItemWithoutMainItemCode } = mainItem;
         const updatedRecord: MainItem = {
           ...mainItemWithoutMainItemCode, // Copy all properties from the original record
           subItems: [
@@ -885,7 +897,7 @@ export class InvoiceComponent {
             filteredSubItem
           ],
 
-          mainItemCode: 0,
+          invoiceMainItemCode: 0,
           totalWithProfit: 0
         }
 
@@ -899,7 +911,7 @@ export class InvoiceComponent {
           })
         );
         console.log(filteredRecord);
-        this._ApiService.patch<MainItem>('mainitems', mainItem.mainItemCode, filteredRecord).subscribe((response: MainItem) => {
+        this._ApiService.patch<MainItem>('mainitems', mainItem.invoiceMainItemCode, filteredRecord).subscribe((response: MainItem) => {
           console.log('mainitem Updated && subItem Created:', response);
           if (response) {
             this.resetNewSubItem();
@@ -940,7 +952,7 @@ export class InvoiceComponent {
         console.log(filteredSubItem);
 
         //const { mainItemCode, ...mainItemWithoutMainItemCode } = mainItem;
-        const { mainItemCode, total, totalWithProfit, ...mainItemWithoutMainItemCode } = mainItem;
+        const { invoiceMainItemCode, total, totalWithProfit, ...mainItemWithoutMainItemCode } = mainItem;
         const updatedRecord: MainItem = {
           ...mainItemWithoutMainItemCode, // Copy all properties from the original record
           subItems: [
@@ -950,7 +962,7 @@ export class InvoiceComponent {
             filteredSubItem
           ],
 
-          mainItemCode: 0,
+          invoiceMainItemCode: 0,
           totalWithProfit: 0
         }
         console.log(updatedRecord.subItems);
@@ -962,7 +974,7 @@ export class InvoiceComponent {
           })
         );
         console.log(filteredRecord);
-        this._ApiService.patch<MainItem>('mainitems', mainItem.mainItemCode, filteredRecord).subscribe((response: MainItem) => {
+        this._ApiService.patch<MainItem>('mainitems', mainItem.invoiceMainItemCode, filteredRecord).subscribe((response: MainItem) => {
           console.log('mainitem Updated && subItem Created:', response);
           if (response) {
             this.resetNewSubItem();
@@ -979,8 +991,8 @@ export class InvoiceComponent {
 
   resetNewSubItem() {
     this.newSubItem = {
-      subItemCode: 0,
-      mainItemCode: 0,
+      invoiceSubItemCode: 0,
+      invoiceMainItemCode: 0,
       serviceNumberCode: 0,
       description: "",
       quantity: 0,
@@ -1014,6 +1026,7 @@ export class InvoiceComponent {
     });
     FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
   }
+  
   // handle Formula Parameters 
   showPopup: boolean = false;
   parameterValues: { [key: string]: number } = {};

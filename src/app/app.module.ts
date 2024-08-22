@@ -29,6 +29,7 @@ import { AnimateModule } from 'primeng/animate';
 import { CardModule } from 'primeng/card';
 import { FieldsetModule } from 'primeng/fieldset';
 import { TreeTableModule } from 'primeng/treetable';
+import { TooltipModule } from 'primeng/tooltip';
 
 
 import { AppRoutingModule } from './app-routing.module';
@@ -39,6 +40,7 @@ import { AuthInterceptorService } from './auth/auth-interceptor.service';
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
 import { AlertComponent } from './shared/alert/alert.component';
 import { InvoiceComponent } from './invoice/invoice.component';
+import { TruncateWordsPipe } from './pipes/truncate-words.pipe';
 
 @NgModule({
   declarations: [
@@ -46,6 +48,8 @@ import { InvoiceComponent } from './invoice/invoice.component';
     HeaderComponent,
     LoadingSpinnerComponent,
     InvoiceComponent,
+    
+    TruncateWordsPipe,
 
   ],
   imports: [
@@ -78,6 +82,7 @@ import { InvoiceComponent } from './invoice/invoice.component';
     CheckboxModule,
     FieldsetModule,
     TreeTableModule,
+    TooltipModule,
   
     NgHttpLoaderModule.forRoot(),
   ],

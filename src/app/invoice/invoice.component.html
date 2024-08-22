@@ -57,11 +57,11 @@
 
 <p-toast></p-toast>
 
-<p-table [value]="mainItemsRecords" dataKey="mainItemCode" [resizableColumns]="true" [expandedRowKeys]="expandedRows"
-    editMode="row">
+<p-table [value]="mainItemsRecords" dataKey="invoiceMainItemCode" [resizableColumns]="true"
+    [expandedRowKeys]="expandedRows" editMode="row">
     <ng-template pTemplate="caption">
         <div class="flex flex-wrap justify-content-between gap-2">
-            <div >
+            <div>
                 <span class="p-input-icon-left">
                     <input pInputText type="text" placeholder="Search...."
                         class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary " />
@@ -69,9 +69,10 @@
 
             </div>
             <div>
-                
+
                 <div class="p-inputgroup ml-3">
-                    <input type="number"[min]="0"  pInputNumber placeholder="Profit Margin" [(ngModel)]="profitMarginValue" />
+                    <input type="number" [min]="0" pInputNumber placeholder="Profit Margin"
+                        [(ngModel)]="profitMarginValue" />
                     <button type="button" pButton class="btn btn-outline-primary"
                         (click)="updateProfitMargin(profitMarginValue)">Apply Profit Margin</button>
                 </div>
@@ -170,18 +171,31 @@
                 <p-cellEditor>
                     <ng-template pTemplate="input">
                         <ng-container *ngIf="!updateSelectedServiceNumberRecord">
-                            <input pInputText type="text" [(ngModel)]="mainItem.description">
+                            <input pInputText type="text" [(ngModel)]="mainItem.description"
+                                pTooltip="{{ mainItem.description }}" tooltipPosition="top" [autoHide]="false">
                         </ng-container>
                         <ng-container *ngIf="updateShortTextChangeAllowed && updateSelectedServiceNumberRecord">
                             <input pInputText type="text" [ngModel]="updateSelectedServiceNumberRecord.description"
-                                (ngModelChange)="updateShortText = $event">
+                                (ngModelChange)="updateShortText = $event" pTooltip="{{ mainItem.description }}"
+                                tooltipPosition="top" [autoHide]="false">
                         </ng-container>
                         <ng-container *ngIf="!updateShortTextChangeAllowed && updateSelectedServiceNumberRecord">
-                            {{ updateSelectedServiceNumberRecord.description }}
+                            <!-- {{ updateSelectedServiceNumberRecord.description }} -->
+                            <div class="text-ellipsis"
+                            [pTooltip]="updateSelectedServiceNumberRecord.description"
+                            tooltipPosition="top" [autoHide]="false">
+                            {{ updateSelectedServiceNumberRecord.description | truncateWords }}
+                        </div>
                         </ng-container>
                     </ng-template>
                     <ng-template pTemplate="output">
-                        {{ mainItem.description }}
+                        <!-- {{ mainItem.description }} -->
+                        <div class="text-container">
+                            <div class="text-ellipsis" pTooltip="{{ mainItem.description }}"
+                                tooltipPosition="top" [autoHide]="false">
+                                {{ mainItem.description | truncateWords}}
+                            </div>
+                        </div>
                     </ng-template>
                 </p-cellEditor>
             </td>
@@ -193,11 +207,11 @@
                             <input pInputNumber [min]="0" type="number" [(ngModel)]="mainItem.quantity">
                         </ng-container>
                         <ng-container *ngIf="updatedFormulaRecord && resultAfterTestUpdate">
-                            {{ resultAfterTestUpdate}}
+                            {{ resultAfterTestUpdate | number:'1.2-2'}}
                         </ng-container>
                     </ng-template>
                     <ng-template pTemplate="output">
-                        {{ mainItem.quantity }}
+                        {{ mainItem.quantity | number:'1.2-2' }}
                     </ng-template>
                 </p-cellEditor>
             </td>
@@ -299,14 +313,14 @@
                 <p-cellEditor>
                     <ng-template pTemplate="input">
                         <ng-container *ngIf="updatedFormulaRecord && resultAfterTestUpdate">
-                            {{resultAfterTestUpdate * mainItem.amountPerUnit}}
+                            {{resultAfterTestUpdate * mainItem.amountPerUnit | number:'1.2-2'}}
                         </ng-container>
                         <ng-container *ngIf="!updatedFormulaRecord">
-                            {{ mainItem.quantity * mainItem.amountPerUnit }}
+                            {{ mainItem.quantity * mainItem.amountPerUnit | number:'1.2-2' }}
                         </ng-container>
                     </ng-template>
                     <ng-template pTemplate="output">
-                        {{ mainItem.total }}
+                        {{ mainItem.total | number:'1.2-2' }}
                     </ng-template>
                 </p-cellEditor>
             </td>
@@ -352,7 +366,7 @@
                     <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil"
                         (click)="onMainItemEditInit(mainItem)" class="p-button-rounded p-button-text"></button>
                     <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check"
-                        (click)="onMainItemEditSave(mainItem.mainItemCode,mainItem)"
+                        (click)="onMainItemEditSave(mainItem.invoiceMainItemCode,mainItem)"
                         class="p-button-rounded p-button-text p-button-success mr-2"></button>
                     <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times"
                         (click)="onMainItemEditCancel(mainItem, ri)"
@@ -364,7 +378,7 @@
 
     <ng-template pTemplate="rowexpansion" let-mainItem>
         <td colspan="18">
-            <p-table [value]="mainItem.subItems" dataKey="subItemCode" [resizableColumns]="true" editMode="row"
+            <p-table [value]="mainItem.subItems" dataKey="invoiceSubItemCode" [resizableColumns]="true" editMode="row"
                 [expandedRowKeys]="expandedRows">
 
                 <ng-template pTemplate="body" let-subItem let-editing="editing" let-ri="rowIndex">
@@ -407,21 +421,42 @@
                             <p-cellEditor>
                                 <ng-template pTemplate="input">
                                     <ng-container *ngIf="!updateSelectedServiceNumberRecord">
-                                        <input pInputText type="text" [(ngModel)]="subItem.description">
+                                        <input pInputText type="text" [(ngModel)]="subItem.description"
+                                            pTooltip="{{ subItem.description }}" tooltipPosition="top"
+                                            [autoHide]="false">
                                     </ng-container>
                                     <ng-container
                                         *ngIf="updateShortTextChangeAllowed && updateSelectedServiceNumberRecord">
                                         <input pInputText type="text"
                                             [ngModel]="updateSelectedServiceNumberRecord.description"
-                                            (ngModelChange)="updateShortText = $event">
+                                            (ngModelChange)="updateShortText = $event"
+                                            pTooltip="{{ subItem.description }}" tooltipPosition="top"
+                                            [autoHide]="false">
                                     </ng-container>
-                                    <ng-container
-                                        *ngIf="!updateShortTextChangeAllowed && updateSelectedServiceNumberRecord">
-                                        {{ updateSelectedServiceNumberRecord.description }}
+                                    <ng-container *ngIf="!updateShortTextChangeAllowed && updateSelectedServiceNumberRecord">
+                                        <div class="text-ellipsis"
+                                            [pTooltip]="updateSelectedServiceNumberRecord.description"
+                                            tooltipPosition="top" [autoHide]="false">
+                                            {{ updateSelectedServiceNumberRecord.description | truncateWords }}
+                                        </div>
                                     </ng-container>
                                 </ng-template>
                                 <ng-template pTemplate="output">
-                                    {{ subItem.description }}
+                                    <!-- {{ subItem.description }} -->
+                                    <!-- <div style="white-space: nowrap; 
+                                    overflow: hidden;
+                                    text-overflow: ellipsis; 
+                                    display: block; 
+                                    max-width: 100%;" class="text-ellipsis" [pTooltip]="subItem.description"
+                                        tooltipPosition="top" [autoHide]="false">
+                                        {{ subItem.description }}
+                                    </div> -->
+                                    <div class="text-container">
+                                        <div class="text-ellipsis" pTooltip="{{ subItem.description }}"
+                                            tooltipPosition="top" [autoHide]="false">
+                                            {{ subItem.description | truncateWords}}
+                                        </div>
+                                    </div>
                                 </ng-template>
                             </p-cellEditor>
                         </td>
@@ -432,11 +467,11 @@
                                         <input pInputNumber [min]="0" type="number" [(ngModel)]="subItem.quantity">
                                     </ng-container>
                                     <ng-container *ngIf="updatedFormulaRecord && resultAfterTestUpdate">
-                                        {{ resultAfterTestUpdate}}
+                                        {{ resultAfterTestUpdate | number:'1.2-2'}}
                                     </ng-container>
                                 </ng-template>
                                 <ng-template pTemplate="output">
-                                    {{ subItem.quantity }}
+                                    {{ subItem.quantity | number:'1.2-2' }}
                                 </ng-template>
                             </p-cellEditor>
                         </td>
@@ -543,14 +578,14 @@
                             <p-cellEditor>
                                 <ng-template pTemplate="input">
                                     <ng-container *ngIf="updatedFormulaRecord && resultAfterTestUpdate">
-                                        {{resultAfterTestUpdate * subItem.amountPerUnit}}
+                                        {{resultAfterTestUpdate * subItem.amountPerUnit | number:'1.2-2'}}
                                     </ng-container>
                                     <ng-container *ngIf="!updatedFormulaRecord">
-                                        {{ subItem.quantity * subItem.amountPerUnit }}
+                                        {{ subItem.quantity * subItem.amountPerUnit | number:'1.2-2' }}
                                     </ng-container>
                                 </ng-template>
                                 <ng-template pTemplate="output">
-                                    {{ subItem.total }}
+                                    {{ subItem.total | number:'1.2-2' }}
                                 </ng-template>
                             </p-cellEditor>
                         </td>
@@ -563,7 +598,7 @@
                                     icon="pi pi-pencil" (click)="onSubItemEditInit(subItem)"
                                     class="p-button-rounded p-button-text"></button>
                                 <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow
-                                    icon="pi pi-check" (click)="onSubItemEditSave(subItem.subItemCode,subItem)"
+                                    icon="pi pi-check" (click)="onSubItemEditSave(subItem.invoiceSubItemCode,subItem)"
                                     class="p-button-rounded p-button-text p-button-success mr-2"></button>
                                 <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow
                                     icon="pi pi-times" (click)="onSubItemEditCancel(subItem, ri)"
@@ -603,20 +638,27 @@
                         </td>
                         <td style="min-width: 10rem;">
                             <ng-container *ngIf="!selectedServiceNumberRecord">
-                                <input pInputText type="text" [(ngModel)]="newSubItem.description">
+                                <input pInputText type="text" [(ngModel)]="newSubItem.description"
+                                    pTooltip="{{ newSubItem.description }}" tooltipPosition="top" [autoHide]="false">
                             </ng-container>
                             <ng-container *ngIf="shortTextChangeAllowed && selectedServiceNumberRecord">
                                 <input pInputText type="text" [(ngModel)]="selectedServiceNumberRecord.description"
-                                    (ngModelChange)="shortText = $event">
+                                    (ngModelChange)="shortText = $event" pTooltip="{{ newSubItem.description }}"
+                                    tooltipPosition="top" [autoHide]="false">
                             </ng-container>
                             <ng-container *ngIf="!shortTextChangeAllowed && selectedServiceNumberRecord">
-                                {{ selectedServiceNumberRecord.description }}
+                                <!-- {{ selectedServiceNumberRecord.description }} -->
+                                <div class="text-ellipsis"
+                                [pTooltip]="selectedServiceNumberRecord.description"
+                                tooltipPosition="top" [autoHide]="false">
+                                {{ selectedServiceNumberRecord.description | truncateWords }}
+                            </div>
                             </ng-container>
                             <!-- <input pInputNumber name="description" type="text" [(ngModel)]="newSubItem.description"> -->
                         </td>
                         <td style="min-width: 10rem;">
                             <ng-container *ngIf=" selectedFormula && selectedFormulaRecord && resultAfterTest">
-                                {{resultAfterTest}}
+                                {{resultAfterTest | number:'1.2-2'}}
                             </ng-container>
                             <ng-container *ngIf="!selectedFormulaRecord">
                                 <input pInputNumber name="quantity" type="number" [min]="0"
@@ -691,10 +733,10 @@
                         </td>
                         <td style="min-width: 10rem;">
                             <ng-container *ngIf="selectedFormulaRecord && resultAfterTest">
-                                {{ resultAfterTest * (newSubItem.amountPerUnit ?? 0) }}
+                                {{ resultAfterTest * (newSubItem.amountPerUnit ?? 0) | number:'1.2-2' }}
                             </ng-container>
                             <ng-container *ngIf="!selectedFormulaRecord">
-                                {{ (newSubItem.quantity ?? 0) * (newSubItem.amountPerUnit ?? 0) }}
+                                {{ (newSubItem.quantity ?? 0) * (newSubItem.amountPerUnit ?? 0) | number:'1.2-2' }}
                             </ng-container>
                         </td>
                         <td style="min-width: 16.5rem;">
@@ -749,20 +791,27 @@
             </td>
             <td style="min-width: 10rem;">
                 <ng-container *ngIf="!selectedServiceNumberRecord">
-                    <input pInputText type="text" [(ngModel)]="newMainItem.description">
+                    <input pInputText type="text" [(ngModel)]="newMainItem.description"
+                        pTooltip="{{ newMainItem.description }}" tooltipPosition="top" [autoHide]="false">
                 </ng-container>
                 <ng-container *ngIf="shortTextChangeAllowed && selectedServiceNumberRecord">
                     <input pInputText type="text" [(ngModel)]="selectedServiceNumberRecord.description"
-                        (ngModelChange)="shortText = $event">
+                        (ngModelChange)="shortText = $event" pTooltip="{{ newMainItem.description }}"
+                        tooltipPosition="top" [autoHide]="false">
                 </ng-container>
                 <ng-container *ngIf="!shortTextChangeAllowed && selectedServiceNumberRecord">
-                    {{ selectedServiceNumberRecord.description }}
+                    <!-- {{ selectedServiceNumberRecord.description }} -->
+                    <div class="text-ellipsis"
+                    [pTooltip]="selectedServiceNumberRecord.description"
+                    tooltipPosition="top" [autoHide]="false">
+                    {{ selectedServiceNumberRecord.description | truncateWords }}
+                </div>
                 </ng-container>
                 <!-- <input pInputText name="description" type="text" [(ngModel)]="newMainItem.description"> -->
             </td>
             <td style="min-width: 10rem;">
                 <ng-container *ngIf=" selectedFormula && selectedFormulaRecord && resultAfterTest">
-                    {{resultAfterTest}}
+                    {{resultAfterTest | number:'1.2-2'}}
                 </ng-container>
                 <ng-container *ngIf="!selectedFormulaRecord">
                     <input pInputNumber name="quantity" type="number" [min]="0" [(ngModel)]="newMainItem.quantity">
@@ -837,10 +886,10 @@
             </td>
             <td style="min-width: 10rem;">
                 <ng-container *ngIf="selectedFormulaRecord && resultAfterTest">
-                    {{ resultAfterTest * (newMainItem.amountPerUnit ?? 0) }}
+                    {{ resultAfterTest * (newMainItem.amountPerUnit ?? 0) | number:'1.2-2' }}
                 </ng-container>
                 <ng-container *ngIf="!selectedFormulaRecord">
-                    {{ (newMainItem.quantity ?? 0) * (newMainItem.amountPerUnit ?? 0) }}
+                    {{ (newMainItem.quantity ?? 0) * (newMainItem.amountPerUnit ?? 0) | number:'1.2-2' }}
                 </ng-container>
                 <!-- <input pInputNumber name="total" type="number" [min]="0" [(ngModel)]="newMainItem.total"> -->
             </td>
