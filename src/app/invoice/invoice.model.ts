@@ -1,7 +1,10 @@
 
 export class SubItem {
-    invoiceSubItemCode: number=0;
-    invoiceMainItemCode?: number;
+
+    Type:string='';
+
+    invoiceSubItemCode?: number=0;
+   // invoiceMainItemCode?: number;
     serviceNumberCode?: number;
     description?: string;
     quantity?: number;
@@ -16,6 +19,8 @@ export class SubItem {
 }
 
 export class MainItem {
+    Type:string='';
+
     invoiceMainItemCode: number=0;
     serviceNumberCode?: number;
     description?: string;

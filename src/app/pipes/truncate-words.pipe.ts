@@ -8,6 +8,6 @@ export class TruncateWordsPipe implements PipeTransform {
     if (!value) return '';
     const words = value.split(' ');
     if (words.length <= wordCount) return value;
-    return words.slice(0, wordCount).join(' ') + ' show more...';
+    return words.slice(0, wordCount).join(' ') + ' ...';
   }
 }
