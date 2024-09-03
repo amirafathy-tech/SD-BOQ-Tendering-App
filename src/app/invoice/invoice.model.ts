@@ -37,4 +37,5 @@ export class MainItem {
     
     doNotPrint?:boolean;
     amountPerUnitWithProfit?: number;
+    
 }

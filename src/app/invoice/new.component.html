@@ -57,13 +57,13 @@
 
 <p-toast></p-toast>
 
-<p-table [value]="mainItemsRecords" dataKey="invoiceMainItemCode" [resizableColumns]="true"
+<p-table [value]="mainItemsRecords |search:searchKey" dataKey="invoiceMainItemCode" [resizableColumns]="true"
     [expandedRowKeys]="expandedRows" editMode="row">
     <ng-template pTemplate="caption">
         <div class="flex flex-wrap justify-content-between gap-2">
             <div>
                 <span class="p-input-icon-left">
-                    <input pInputText type="text" placeholder="Search...."
+                    <input pInputText type="text" placeholder="Search...."  [(ngModel)]="searchKey"
                         class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary " />
                 </span>
 
@@ -78,6 +78,9 @@
                 </div>
             </div>
             <div>
+               
+                <!-- <p-button class=" btn btn-sm" label="Display Footer" icon="pi pi-plus" (onClick)="toggleFooter()" /> -->
+
                 <p-button class=" btn btn-sm" label="Expand All" icon="pi pi-plus" (onClick)="expandAll()" />
                 <p-button class="btn btn-sm" label="Collapse All" icon="pi pi-minus" (onClick)="collapseAll()" />
             </div>
@@ -339,7 +342,9 @@
             <td style="min-width: 9.5rem;">
                 <p-cellEditor>
                     <ng-template pTemplate="input">
-                        {{ ((mainItem.amountPerUnit ?? 0) * ((mainItem.profitMargin ?? 0)/100))+
+                        {{ (mainItem.profitMargin ?? 0) === 0 
+                            ? 0 
+                            : ((mainItem.amountPerUnit ?? 0) * ((mainItem.profitMargin ?? 0)/100))+
                             (mainItem.amountPerUnit ?? 0) }}
                         <!-- <input pInputNumber name="amountPerUnitWithProfit" type="number" [min]="0"
                             [(ngModel)]="mainItem.amountPerUnitWithProfit"> -->
@@ -354,12 +359,18 @@
                 <p-cellEditor>
                     <ng-template pTemplate="input">
                         <ng-container *ngIf="updatedFormulaRecord && resultAfterTestUpdate">
-                            {{ ((resultAfterTestUpdate * (mainItem.amountPerUnit ?? 0))* ((mainItem.profitMargin ?? 0)/100))+
+                            {{ (mainItem.profitMargin ?? 0) === 0 
+                                ? 0 
+                                : ((resultAfterTestUpdate * (mainItem.amountPerUnit ?? 0))* ((mainItem.profitMargin ?? 0)/100))+
                             (resultAfterTestUpdate * (mainItem.amountPerUnit ?? 0))}}
                         </ng-container>
                         <ng-container *ngIf="!updatedFormulaRecord">
-                            {{ ( ( (mainItem.quantity ?? 0) * (mainItem.amountPerUnit ?? 0) )* ((mainItem.profitMargin
-                            ?? 0)/100) )+ ( (mainItem.quantity ?? 0) * (mainItem.amountPerUnit ?? 0) )}}
+                            {{ (mainItem.profitMargin ?? 0) === 0 
+                                ? 0 
+                                : ( ( (mainItem.quantity ?? 0) * (mainItem.amountPerUnit ?? 0) )* ((mainItem.profitMargin
+                            ?? 0)/100) )+ ( (mainItem.quantity ?? 0) * (mainItem.amountPerUnit ?? 0) )
+                        
+                        }}
         
                         </ng-container>
                         <!-- <input pInputNumber name="totalWithProfit" type="number" [min]="0"
@@ -650,7 +661,7 @@
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="footer" class="m-3">
-                    <tr>
+                    <tr style="border: 1px solid rgb(5, 57, 130);">
                         <td style="min-width: 10.2rem;">
 
                         </td>
@@ -796,172 +807,183 @@
         </td>
     </ng-template>
 
-    <ng-template pTemplate="footer" class="mt-5">
-        <tr style="border: 1px solid rgb(5, 57, 130);">
-            <td style="min-width: 10rem;">
 
-            </td>
-            <td style="min-width: 10rem;">
-
-            </td>
-            <td style="min-width: 10rem;">
-
-            </td>
-            <td style="min-width: 10rem;">
-
-            </td>
-            <td style="min-width: 10rem;">
-                <!-- <p-radioButton name="type" value="S" [(ngModel)]="recordType" inputId="type" />
-                    <label for="type" class="ml-2">
-                        S
-                    </label> -->
-            </td>
-            <td style="min-width: 10rem;">
-                <p-dropdown [options]="recordsServiceNumber" [(ngModel)]="selectedServiceNumber"
-                    [ngModelOptions]="{standalone: true}" optionValue="serviceNumberCode" optionLabel="description"
-                    [filter]="true" [filterFields]="['searchTerm','description']" [showClear]="true"
-                    placeholder="Select SeviceNumber" (onChange)="onServiceNumberChange($event)" [appendTo]="'body'"
-                    [virtualScroll]="true" [virtualScrollItemSize]="40">
-                    <ng-template let-record pTemplate="item">
-                        <div class="flex align-items-center gap-2">
-                            <div>{{ record.searchTerm }}::{{ record.description }}</div>
-                        </div>
-                    </ng-template>
-                </p-dropdown>
-            </td>
-            <td style="min-width: 10rem;">
-                <ng-container *ngIf="!selectedServiceNumberRecord">
-                    <input pInputText type="text" [(ngModel)]="newMainItem.description"
-                        pTooltip="{{ newMainItem.description }}" tooltipPosition="top" [autoHide]="false">
-                </ng-container>
-                <ng-container *ngIf="shortTextChangeAllowed && selectedServiceNumberRecord">
-                    <input pInputText type="text" [(ngModel)]="selectedServiceNumberRecord.description"
-                        (ngModelChange)="shortText = $event" pTooltip="{{ newMainItem.description }}"
-                        tooltipPosition="top" [autoHide]="false">
-                </ng-container>
-                <ng-container *ngIf="!shortTextChangeAllowed && selectedServiceNumberRecord">
-                    <!-- {{ selectedServiceNumberRecord.description }} -->
-                    <div class="text-ellipsis" [pTooltip]="selectedServiceNumberRecord.description"
-                        tooltipPosition="top" [autoHide]="false">
-                        {{ selectedServiceNumberRecord.description | truncateWords }}
-                    </div>
-                </ng-container>
-                <!-- <input pInputText name="description" type="text" [(ngModel)]="newMainItem.description"> -->
-            </td>
-            <td style="min-width: 10rem;">
-                <ng-container *ngIf=" selectedFormula && selectedFormulaRecord && resultAfterTest">
-                    {{resultAfterTest | number:'1.2-2'}}
-                </ng-container>
-                <ng-container *ngIf="!selectedFormulaRecord">
-                    <input pInputNumber name="quantity" type="number" [min]="0" [(ngModel)]="newMainItem.quantity">
-                </ng-container>
-            </td>
-            <td style="min-width: 10rem;">
-                <ng-container *ngIf="selectedServiceNumberRecord">
-                    {{selectedServiceNumberRecord.baseUnitOfMeasurement}}
-                </ng-container>
-
-                <ng-container *ngIf="!selectedServiceNumberRecord">
-                    <p-dropdown [options]="recordsUnitOfMeasure" [(ngModel)]="selectedUnitOfMeasure"
-                        [ngModelOptions]="{standalone: true}" optionValue="UnitOfMeasureLongName"
-                        optionLabel="UnitOfMeasureLongName" [filter]="true"
-                        [filterFields]="['UnitOfMeasureLongName','UnitOfMeasureName']" [showClear]="true"
-                        placeholder="Select UnitOfMeasure" [required]="true" [appendTo]="'body'" [virtualScroll]="true"
-                        [virtualScrollItemSize]="40">
+    
+    <!-- <div *ngIf="showFooter"> -->
+        <ng-template  pTemplate="footer" class="mt-5">
+            <tr style="border: 1px solid rgb(5, 57, 130);">
+                <td style="min-width: 10rem;">
+    
+                </td>
+                <td style="min-width: 10rem;">
+    
+                </td>
+                <td style="min-width: 10rem;">
+    
+                </td>
+                <td style="min-width: 10rem;">
+    
+                </td>
+                <td style="min-width: 10rem;">
+                    <!-- <p-radioButton name="type" value="S" [(ngModel)]="recordType" inputId="type" />
+                        <label for="type" class="ml-2">
+                            S
+                        </label> -->
+                </td>
+                <td style="min-width: 10rem;">
+                    <p-dropdown [options]="recordsServiceNumber" [(ngModel)]="selectedServiceNumber"
+                        [ngModelOptions]="{standalone: true}" optionValue="serviceNumberCode" optionLabel="description"
+                        [filter]="true" [filterFields]="['searchTerm','description']" [showClear]="true"
+                        placeholder="Select SeviceNumber" (onChange)="onServiceNumberChange($event)" [appendTo]="'body'"
+                        [virtualScroll]="true" [virtualScrollItemSize]="40">
                         <ng-template let-record pTemplate="item">
                             <div class="flex align-items-center gap-2">
-                                <div>{{ record.UnitOfMeasureLongName }}::{{ record.UnitOfMeasureName }}</div>
+                                <div>{{ record.searchTerm }}::{{ record.description }}</div>
                             </div>
                         </ng-template>
                     </p-dropdown>
-                </ng-container>
-            </td>
-            <td style="min-width: 10rem;">
-                <p-dropdown [options]="recordsFormula" [(ngModel)]="selectedFormula"
-                    [ngModelOptions]="{standalone: true}" optionValue="formula" optionLabel="formula" [filter]="true"
-                    [filterFields]="['formula','description']" [showClear]="true" placeholder="Select Formula"
-                    [required]="true" (onChange)="onFormulaSelect($event)" [appendTo]="'body'" [virtualScroll]="true"
-                    [virtualScrollItemSize]="40">
-                    <ng-template let-record pTemplate="item">
-                        <div class="flex align-items-center gap-2">
-                            <div>{{ record.formula }}::{{ record.description }}</div>
+                </td>
+                <td style="min-width: 10rem;">
+                    <ng-container *ngIf="!selectedServiceNumberRecord">
+                        <input pInputText type="text" [(ngModel)]="newMainItem.description"
+                            pTooltip="{{ newMainItem.description }}" tooltipPosition="top" [autoHide]="false">
+                    </ng-container>
+                    <ng-container *ngIf="shortTextChangeAllowed && selectedServiceNumberRecord">
+                        <input pInputText type="text" [(ngModel)]="selectedServiceNumberRecord.description"
+                            (ngModelChange)="shortText = $event" pTooltip="{{ newMainItem.description }}"
+                            tooltipPosition="top" [autoHide]="false">
+                    </ng-container>
+                    <ng-container *ngIf="!shortTextChangeAllowed && selectedServiceNumberRecord">
+                        <!-- {{ selectedServiceNumberRecord.description }} -->
+                        <div class="text-ellipsis" [pTooltip]="selectedServiceNumberRecord.description"
+                            tooltipPosition="top" [autoHide]="false">
+                            {{ selectedServiceNumberRecord.description | truncateWords }}
                         </div>
-                    </ng-template>
-                </p-dropdown>
-            </td>
-            <td style="min-width: 10rem;">
-                <button class="mb-2" (click)="openPopup()">Enter Parameters</button>
-                <ng-container *ngIf="showPopup && selectedFormulaRecord ">
-                    <div class="popup">
-                        <h3>Enter Parameters</h3>
-                        <div *ngFor="let parameterId of selectedFormulaRecord.parameterIds">
-
-                            <label class="form-label">{{ parameterId }}:</label>
-                            <input class="form-input" pInputNumber type="number" [min]="0"
-                                [(ngModel)]="parameterValues[parameterId]">
+                    </ng-container>
+                    <!-- <input pInputText name="description" type="text" [(ngModel)]="newMainItem.description"> -->
+                </td>
+                <td style="min-width: 10rem;">
+                    <ng-container *ngIf=" selectedFormula && selectedFormulaRecord && resultAfterTest">
+                        {{resultAfterTest | number:'1.2-2'}}
+                    </ng-container>
+                    <ng-container *ngIf="!selectedFormulaRecord">
+                        <input pInputNumber name="quantity" type="number" [min]="0" [(ngModel)]="newMainItem.quantity">
+                    </ng-container>
+                </td>
+                <td style="min-width: 10rem;">
+                    <ng-container *ngIf="selectedServiceNumberRecord">
+                        {{selectedServiceNumberRecord.baseUnitOfMeasurement}}
+                    </ng-container>
+    
+                    <ng-container *ngIf="!selectedServiceNumberRecord">
+                        <p-dropdown [options]="recordsUnitOfMeasure" [(ngModel)]="selectedUnitOfMeasure"
+                            [ngModelOptions]="{standalone: true}" optionValue="UnitOfMeasureLongName"
+                            optionLabel="UnitOfMeasureLongName" [filter]="true"
+                            [filterFields]="['UnitOfMeasureLongName','UnitOfMeasureName']" [showClear]="true"
+                            placeholder="Select UnitOfMeasure" [required]="true" [appendTo]="'body'" [virtualScroll]="true"
+                            [virtualScrollItemSize]="40">
+                            <ng-template let-record pTemplate="item">
+                                <div class="flex align-items-center gap-2">
+                                    <div>{{ record.UnitOfMeasureLongName }}::{{ record.UnitOfMeasureName }}</div>
+                                </div>
+                            </ng-template>
+                        </p-dropdown>
+                    </ng-container>
+                </td>
+                <td style="min-width: 10rem;">
+                    <p-dropdown [options]="recordsFormula" [(ngModel)]="selectedFormula"
+                        [ngModelOptions]="{standalone: true}" optionValue="formula" optionLabel="formula" [filter]="true"
+                        [filterFields]="['formula','description']" [showClear]="true" placeholder="Select Formula"
+                        [required]="true" (onChange)="onFormulaSelect($event)" [appendTo]="'body'" [virtualScroll]="true"
+                        [virtualScrollItemSize]="40">
+                        <ng-template let-record pTemplate="item">
+                            <div class="flex align-items-center gap-2">
+                                <div>{{ record.formula }}::{{ record.description }}</div>
+                            </div>
+                        </ng-template>
+                    </p-dropdown>
+                </td>
+                <td style="min-width: 10rem;">
+                    <button class="mb-2" (click)="openPopup()">Enter Parameters</button>
+                    <ng-container *ngIf="showPopup && selectedFormulaRecord ">
+                        <div class="popup">
+                            <h3>Enter Parameters</h3>
+                            <div *ngFor="let parameterId of selectedFormulaRecord.parameterIds">
+    
+                                <label class="form-label">{{ parameterId }}:</label>
+                                <input class="form-input" pInputNumber type="number" [min]="0"
+                                    [(ngModel)]="parameterValues[parameterId]">
+                            </div>
+                            <button class="form-button" (click)="saveParameters()">Save</button>
                         </div>
-                        <button class="form-button" (click)="saveParameters()">Save</button>
-                    </div>
-                </ng-container>
-
-            </td>
-            <td style="min-width: 10rem;">
-                <input pInputNumber name="amountPerUnit" type="number" [min]="0"
-                    [(ngModel)]="newMainItem.amountPerUnit">
-            </td>
-            <!-- update into currency fields -->
-            <td style="min-width: 10rem;">
-                <p-dropdown [options]="recordsCurrency" [(ngModel)]="selectedCurrency"
-                    [ngModelOptions]="{standalone: true}" optionValue="code" optionLabel="code" [filter]="true"
-                    [filterFields]="['code','description']" [showClear]="true" placeholder="Select Currency"
-                    [required]="true" [appendTo]="'body'" [virtualScroll]="true"
-                    [virtualScrollItemSize]="40">
-                    <ng-template let-record pTemplate="item">
-                        <div class="flex align-items-center gap-2">
-                            <div>{{ record.code }}::{{ record.description }}</div>
-                        </div>
-                    </ng-template>
-                </p-dropdown>
-            </td>
-            <td style="min-width: 10rem;">
-                <ng-container *ngIf="selectedFormulaRecord && resultAfterTest">
-                    {{ resultAfterTest * (newMainItem.amountPerUnit ?? 0) | number:'1.2-2' }}
-                </ng-container>
-                <ng-container *ngIf="!selectedFormulaRecord">
-                    {{ (newMainItem.quantity ?? 0) * (newMainItem.amountPerUnit ?? 0) | number:'1.2-2' }}
-                </ng-container>
-                <!-- <input pInputNumber name="total" type="number" [min]="0" [(ngModel)]="newMainItem.total"> -->
-            </td>
-            <td style="min-width: 10rem;">
-                <input pInputNumber name="profitMargin" type="number" [min]="0" [(ngModel)]="newMainItem.profitMargin">
-            </td>
-            <td style="min-width: 10rem;">
-                {{ ((newMainItem.amountPerUnit ?? 0) * ((newMainItem.profitMargin ?? 0)/100))+
-                (newMainItem.amountPerUnit ?? 0) }}
-                <!-- <input pInputNumber name="amountPerUnitWithProfit" type="number" [min]="0"
-                    [(ngModel)]="newMainItem.amountPerUnitWithProfit"> -->
-            </td>
-            <td style="min-width: 10rem;">
-                <ng-container *ngIf="selectedFormulaRecord && resultAfterTest">
-                    {{ ((resultAfterTest * (newMainItem.amountPerUnit ?? 0))* ((newMainItem.profitMargin ?? 0)/100))+
-                    (resultAfterTest * (newMainItem.amountPerUnit ?? 0))}}
-                </ng-container>
-                <ng-container *ngIf="!selectedFormulaRecord">
-                    {{ ( ( (newMainItem.quantity ?? 0) * (newMainItem.amountPerUnit ?? 0) )* ((newMainItem.profitMargin
-                    ?? 0)/100) )+ ( (newMainItem.quantity ?? 0) * (newMainItem.amountPerUnit ?? 0) )}}
-
-                </ng-container>
-
-                <!-- <input pInputNumber name="totalWithProfit" type="number" [min]="0"
-                    [(ngModel)]="newMainItem.totalWithProfit"> -->
-            </td>
-            <td style="min-width: 10rem;">
-                <button pButton type="button" icon="pi pi-plus" class="ui-button-info" label="Save MainItem"
-                    (click)="addMainItem()">
-                </button>
-            </td>
-        </tr>
-    </ng-template>
+                    </ng-container>
+    
+                </td>
+                <td style="min-width: 10rem;">
+                    <input pInputNumber name="amountPerUnit" type="number" [min]="0"
+                        [(ngModel)]="newMainItem.amountPerUnit">
+                </td>
+                <!-- update into currency fields -->
+                <td style="min-width: 10rem;">
+                    <p-dropdown [options]="recordsCurrency" [(ngModel)]="selectedCurrency"
+                        [ngModelOptions]="{standalone: true}" optionValue="code" optionLabel="code" [filter]="true"
+                        [filterFields]="['code','description']" [showClear]="true" placeholder="Select Currency"
+                        [required]="true" [appendTo]="'body'" [virtualScroll]="true"
+                        [virtualScrollItemSize]="40">
+                        <ng-template let-record pTemplate="item">
+                            <div class="flex align-items-center gap-2">
+                                <div>{{ record.code }}::{{ record.description }}</div>
+                            </div>
+                        </ng-template>
+                    </p-dropdown>
+                </td>
+                <td style="min-width: 10rem;">
+                    <ng-container *ngIf="selectedFormulaRecord && resultAfterTest">
+                        {{ resultAfterTest * (newMainItem.amountPerUnit ?? 0) | number:'1.2-2' }}
+                    </ng-container>
+                    <ng-container *ngIf="!selectedFormulaRecord">
+                        {{ (newMainItem.quantity ?? 0) * (newMainItem.amountPerUnit ?? 0) | number:'1.2-2' }}
+                    </ng-container>
+                    <!-- <input pInputNumber name="total" type="number" [min]="0" [(ngModel)]="newMainItem.total"> -->
+                </td>
+                <td style="min-width: 10rem;">
+                    <input pInputNumber name="profitMargin" type="number" [min]="0" [(ngModel)]="newMainItem.profitMargin">
+                </td>
+                <td style="min-width: 10rem;">
+                    {{ (newMainItem.profitMargin ?? 0) === 0 
+                        ? 0 
+                        : ((newMainItem.amountPerUnit ?? 0) * ((newMainItem.profitMargin ?? 0)/100))+
+                    (newMainItem.amountPerUnit ?? 0) }}
+                    <!-- <input pInputNumber name="amountPerUnitWithProfit" type="number" [min]="0"
+                        [(ngModel)]="newMainItem.amountPerUnitWithProfit"> -->
+                </td>
+                <td style="min-width: 10rem;">
+                    <ng-container *ngIf="selectedFormulaRecord && resultAfterTest">
+                        {{ (newMainItem.profitMargin ?? 0) === 0 
+                            ? 0 
+                            : ((resultAfterTest * (newMainItem.amountPerUnit ?? 0))* ((newMainItem.profitMargin ?? 0)/100))+
+                        (resultAfterTest * (newMainItem.amountPerUnit ?? 0))}}
+                    </ng-container>
+                    <ng-container *ngIf="!selectedFormulaRecord">
+                        {{ (newMainItem.profitMargin ?? 0) === 0 
+                            ? 0 
+                            : ( ( (newMainItem.quantity ?? 0) * (newMainItem.amountPerUnit ?? 0) )* ((newMainItem.profitMargin
+                        ?? 0)/100) )+ ( (newMainItem.quantity ?? 0) * (newMainItem.amountPerUnit ?? 0) )}}
+    
+                    </ng-container>
+    
+                    <!-- <input pInputNumber name="totalWithProfit" type="number" [min]="0"
+                        [(ngModel)]="newMainItem.totalWithProfit"> -->
+                </td>
+                <td style="min-width: 10rem;">
+                    <button pButton type="button" icon="pi pi-plus" class="ui-button-info" label="Save MainItem"
+                        (click)="addMainItem()">
+                    </button>
+                </td>
+            </tr>
+        </ng-template>
+   
+<!-- </div> -->
 </p-table>
 
 <p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>
