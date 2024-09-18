@@ -4,6 +4,8 @@ import { BrowserModule, provideClientHydration } from '@angular/platform-browser
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FundamentalNgxCoreModule } from '@fundamental-ngx/core';
+import { InputGroupModule } from '@fundamental-ngx/core/input-group';
+
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -56,6 +58,7 @@ import { SearchPipe } from './pipes/search.pipe';
   ],
   imports: [
     FundamentalNgxCoreModule,
+    InputGroupModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,

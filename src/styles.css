@@ -7,7 +7,11 @@
 @import 'primeng/resources/primeng.min.css';
 
 
+
 @import "primeflex/primeflex.css";
+
+/* @import "~@fundamental-ngx/core/styles.css"; */
+@import "node_modules/@fundamental-ngx/core/styles/fundamental-ngx-core.css" ;
 
 
 

@@ -18,6 +18,10 @@ import { Formula } from '../models/formulas.model';
 })
 export class InvoiceComponent {
 
+  // Pagination:
+  loading: boolean = true;
+  loadingSubItems: boolean = true;
+
 
   showFooter: boolean = false;
 
@@ -75,7 +79,7 @@ export class InvoiceComponent {
   selectedUnitOfMeasureSubItem!: string;
 
   recordsCurrency!: any[];
-  selectedCurrency: string="";
+  selectedCurrency: string = "";
   // currency for subitem:
   selectedCurrencySubItem!: string;
   //
@@ -88,31 +92,40 @@ export class InvoiceComponent {
   subItemsRecords: SubItem[] = [];
 
   updateProfitMargin(value: number) {
-    for (const row of this.selectedRowsForProfit) {
-      row.profitMargin = value;
-      const { invoiceMainItemCode, total, totalWithProfit, ...mainItemWithoutMainItemCode } = row;
-      const updatedMainItem = this.removePropertiesFrom(mainItemWithoutMainItemCode, ['invoiceMainItemCode', 'invoiceSubItemCode']);
-      console.log(updatedMainItem);
+    console.log(value);
 
-      const newRecord: MainItem = {
-        ...updatedMainItem, // Copy all properties from the original record
-        // Modify specific attributes
-        subItems: (row?.subItems ?? []).map(subItem =>
-          this.removeProperties(subItem, ['invoiceMainItemCode', 'invoiceSubItemCode'])
-        ),
-        profitMargin: value
+    if (value !== null && value < 0) {
+      this.profitMarginValue = 0; // Reset to 0 
+     // alert('Negative values are not allowed');
+     this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Negative values are not allowed', life: 4000 });
+    } else {
 
-      };
-      console.log(newRecord);
-      const updatedRecord = this.removeProperties(newRecord, ['selected'])
+      for (const row of this.selectedRowsForProfit) {
+        row.profitMargin = value;
+        const { invoiceMainItemCode, total, totalWithProfit, ...mainItemWithoutMainItemCode } = row;
+        const updatedMainItem = this.removePropertiesFrom(mainItemWithoutMainItemCode, ['invoiceMainItemCode', 'invoiceSubItemCode']);
+        console.log(updatedMainItem);
+
+        const newRecord: MainItem = {
+          ...updatedMainItem, // Copy all properties from the original record
+          // Modify specific attributes
+          subItems: (row?.subItems ?? []).map(subItem =>
+            this.removeProperties(subItem, ['invoiceMainItemCode', 'invoiceSubItemCode'])
+          ),
+          profitMargin: value
+
+        };
+        console.log(newRecord);
+        const updatedRecord = this.removeProperties(newRecord, ['selected'])
 
 
-      this._ApiService.patch<MainItem>('mainitems', row.invoiceMainItemCode, updatedRecord).subscribe(response => {
-        console.log('mainitem updated :', response);
-        this.totalValue = 0;
-        this.ngOnInit();
-      });
+        this._ApiService.patch<MainItem>('mainitems', row.invoiceMainItemCode, updatedRecord).subscribe(response => {
+          console.log('mainitem updated :', response);
+          this.totalValue = 0;
+          this.ngOnInit();
+        });
 
+      }
     }
   }
 
@@ -135,12 +148,14 @@ export class InvoiceComponent {
       this.mainItemsRecords = response.sort((a, b) => a.invoiceMainItemCode - b.invoiceMainItemCode);
       //response.sort((a, b) => b.invoiceMainItemCode - a.invoiceMainItemCode);
       console.log(this.mainItemsRecords);
+      this.loading = false;
 
       this.totalValue = this.mainItemsRecords.reduce((sum, record) => sum + record.totalWithProfit, 0);
       console.log('Total Value:', this.totalValue);
     });
     this._ApiService.get<SubItem[]>('subitems').subscribe(response => {
       this.subItemsRecords = response;
+      this.loadingSubItems=false;
     });
   }
   // Helper Functions:
@@ -971,7 +986,7 @@ export class InvoiceComponent {
       totalWithProfit: 0,
       // subItems?:SubItem[]
     },
-    this.selectedUnitOfMeasure = "";
+      this.selectedUnitOfMeasure = "";
     this.selectedFormula = "";
     this.selectedCurrency = "";
   }
@@ -1537,6 +1552,11 @@ export class InvoiceComponent {
     }
 
   }
+
+  closePopup() {
+    this.showPopupUpdate = false;
+    this.showPopup = false;
+}
 }
 
 

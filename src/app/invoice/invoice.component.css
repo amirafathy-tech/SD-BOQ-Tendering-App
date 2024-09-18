@@ -14,6 +14,97 @@
     max-width: 100%; 
 } */
 
+.rounded-input {
+    border-radius: 8px; 
+    border: 1px solid #ccc; 
+    padding: 8px 12px;
+    font-size: 1rem; 
+    outline: none; 
+    transition: border-color 0.3s, box-shadow 0.3s; 
+  }
+  
+  .rounded-input:focus {
+    border-color: #007bff; 
+    box-shadow: 0 0 0 3px rgba(38, 143, 255, 0.25); 
+  }
+
+  .popup-container {
+    position: fixed; /* Keeps the popup in place on the viewport */
+    top: 0;
+    left: 0;
+    width: 100vw; /* Full viewport width */
+    height: 100vh; /* Full viewport height */
+    display: flex;
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+    background-color: rgba(0, 0, 0, 0.5); /* Optional overlay effect */
+    z-index: 1000; /* Ensure it appears above other content */
+}
+
+/* Style the popup box */
+.popup {
+    position: relative;
+    background: white; /* Background color of the popup */
+    border: 1px solid #ccc; /* Border style */
+    padding: 2rem; /* Padding inside the popup */
+    max-width: 90vw; /* Max width relative to viewport */
+    max-height: 90vh; /* Max height relative to viewport */
+    overflow: auto; /* Enable scroll if content overflows */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional shadow effect */
+    display: flex;
+    flex-direction: column;
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #cd1010; /* Color of the close button */
+}
+.save-params-button{
+    background-color:#007bff ;
+     color: white;
+     border: none;
+}
+
+.profit-margin{
+color: blue;
+}
+.fd-input-group .fd-input-group__addon {
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+    padding: 0.5rem;
+    font-weight: bold;
+  }
+.fd-input-group__addon {
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+    padding: 0.5rem;
+    font-weight: bold;
+  }
+
+.fd-input-group__addon--button {
+    background-color: rgb(10, 84, 196);
+    color: White;
+    border-radius: 3px;
+}
+.fd-input-group .fd-input-group__button{
+    background-color: rgb(10, 84, 196);
+    color: White;
+    border-radius: 3px;
+}
+span.fd-input-group__addon.fd-input-group__addon--button{
+    background-color: rgb(10, 84, 196);
+    color: White;
+    border-radius: 3px;
+}
+
 
 .text-container {
     display: flex;
