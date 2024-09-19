@@ -409,6 +409,8 @@ export class InvoiceComponent {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Invalid Data' });
         },
         complete: () => {
+          this.updatedFormulaRecord=undefined;
+          this.resultAfterTestUpdate=undefined
 
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Record updated successfully ' });
           // this.ngOnInit()
@@ -434,6 +436,8 @@ export class InvoiceComponent {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Invalid Data' });
         },
         complete: () => {
+          this.updatedFormulaRecord=undefined;
+          this.resultAfterTestUpdate=undefined
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Record updated successfully ' });
           // this.ngOnInit()
         }
@@ -577,6 +581,8 @@ export class InvoiceComponent {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Invalid Data' });
         },
         complete: () => {
+          this.updatedFormulaRecordSubItem=undefined;
+          this.resultAfterTestUpdate=undefined
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Record updated successfully ' });
           // this.ngOnInit()
         }
@@ -625,6 +631,8 @@ export class InvoiceComponent {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Invalid Data' });
         },
         complete: () => {
+          this.updatedFormulaRecordSubItem=undefined;
+          this.resultAfterTestUpdate=undefined
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Record updated successfully ' });
           // this.ngOnInit()
         }
@@ -860,6 +868,7 @@ export class InvoiceComponent {
           complete: () => {
             this.resetNewMainItem();
             this.selectedFormulaRecord = undefined
+            this.resultAfterTest=undefined;
             this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Record added successfully ' });
             // this.ngOnInit()
           }
@@ -959,7 +968,8 @@ export class InvoiceComponent {
           },
           complete: () => {
             this.resetNewMainItem();
-            this.selectedFormulaRecord = undefined;
+            this.selectedFormulaRecord = undefined
+            this.resultAfterTest=undefined;
             this.selectedServiceNumberRecord = undefined;
             this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Record added successfully ' });
             // this.ngOnInit()
@@ -1138,6 +1148,8 @@ export class InvoiceComponent {
           },
           complete: () => {
             this.resetNewSubItem();
+            this.selectedFormulaRecordSubItem = undefined
+            this.resultAfterTest=undefined;
             this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Record added successfully ' });
             // this.ngOnInit()
           }
@@ -1285,7 +1297,8 @@ export class InvoiceComponent {
           },
           complete: () => {
             this.resetNewSubItem();
-            this.selectedFormulaRecordSubItem = undefined;
+            this.selectedFormulaRecordSubItem = undefined
+            this.resultAfterTest=undefined;
             this.selectedServiceNumberRecordSubItem = undefined
             this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Record added successfully ' });
             // this.ngOnInit()
@@ -1449,8 +1462,8 @@ export class InvoiceComponent {
       this.showPopupUpdate = false;
     }
   }
-  resultAfterTest!: number
-  resultAfterTestUpdate!: number
+  resultAfterTest?: number
+  resultAfterTestUpdate?: number
   saveParameters() {
     if (this.selectedFormulaRecord) {
       console.log(this.parameterValues);
