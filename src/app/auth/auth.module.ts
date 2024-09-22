@@ -7,11 +7,11 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptorService } from './auth-interceptor.service';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
-import { AlertComponent } from '../shared/alert/alert.component';
+// import { AlertComponent } from '../shared/alert/alert.component';
 import { provideClientHydration } from '@angular/platform-browser';
 
 @NgModule({
-    declarations: [AuthComponent, LoginComponent, RegisterComponent,AlertComponent,],
+    declarations: [AuthComponent, LoginComponent, RegisterComponent,],
     imports:[
         CommonModule,
         FormsModule,

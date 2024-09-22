@@ -12,7 +12,7 @@ import { Formula } from '../models/formulas.model';
 
 @Component({
   selector: 'app-invoice-test',
-  templateUrl: './new.component.html',
+  templateUrl: './invoice.component.html',
   styleUrls: ['./invoice.component.css'],
   providers: [MessageService, InvoiceService, ConfirmationService]
 })
@@ -21,18 +21,6 @@ export class InvoiceComponent {
   // Pagination:
   loading: boolean = true;
   loadingSubItems: boolean = true;
-
-
-  showFooter: boolean = false;
-
-  toggleFooter() {
-
-    this.showFooter = !this.showFooter;
-    console.log(this.showFooter);
-    // this.cdr.detectChanges(); // Manually trigger change detection
-
-  }
-
 
   searchKey: string = ""
   currency: any
@@ -129,11 +117,9 @@ export class InvoiceComponent {
     }
   }
 
-
   constructor(private cdr: ChangeDetectorRef, private _ApiService: ApiService, private _InvoiceService: InvoiceService, private messageService: MessageService, private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
-
     this._ApiService.get<ServiceMaster[]>('servicenumbers').subscribe(response => {
       this.recordsServiceNumber = response
       //.filter(record => record.deletionIndicator === false);
@@ -337,8 +323,6 @@ export class InvoiceComponent {
       console.log(this.updatedFormulaRecordSubItem);
     }
   }
-
-
   expandAll() {
     this.mainItemsRecords.forEach(item => this.expandedRows[item.invoiceMainItemCode] = true);
   }
@@ -695,7 +679,6 @@ export class InvoiceComponent {
       // });
     }
   }
-
   onSubItemEditCancel(subItem: any, index: number) {
     // Check if subItem exists in clonedSubItems
     const originalItem = this.clonedSubItem[subItem.invoiceSubItemCode];
